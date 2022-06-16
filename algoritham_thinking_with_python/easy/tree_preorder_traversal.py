@@ -15,13 +15,29 @@ class PreOrderTraversal:
         print(result)
         return result
 
+    def preorder_traversal_iterative(self, root):
+        if not root:
+            return []
+        stack = [ root ]
+        result = []
+        while stack:
+            node = stack.pop()
+            result.append(node.val)
+            if node.right:
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
+        return result
+
 
 def test_preorder_traversal():
-    tree = Tree()
-    root = tree.create_tree([1, 2, 3, 4, 5, 6, 7])
-    print(tree.print_tree())
+    root = TreeNode(1)
+    root.left = TreeNode(2)
+    root.right = TreeNode(3)
+    root.left.left = TreeNode(4)
+    root.left.right = TreeNode(5)
     preorder_traversal = PreOrderTraversal()
-    assert preorder_traversal.preorder_traversal(root) == [1, 2, 4, 5, 3, 6, 7]
+    assert preorder_traversal.preorder_traversal_iterative(root) == [1, 2, 4, 5, 3]
 
 
 if __name__ == '__main__':

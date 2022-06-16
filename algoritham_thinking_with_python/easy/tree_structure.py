@@ -35,25 +35,44 @@ class Tree:
 
     def print_node(self, node):
         if node is not None:
-            # print as tree
-            print("\t" * (node.val + 1), node.val)
+            print("node:", node.val, end=", ")
             self.print_node(node.left)
             self.print_node(node.right)
 
     def create_tree(self, arr):
-        for x in arr:
-            self.add(x)
+        if not arr:
+            return
+        st = []
+        i = 1
+        self.root = TreeNode(arr[0])
+        st.append(self.root)
+        while i < len(arr):
+            if i%2 > 0:
+                print("i:", i)
+                if arr[i]:
+                    node = st.pop(0)
+                    left_node = TreeNode(arr[i])
+                    node.left = left_node
+                    st.append(node)
+            else:
+                if arr[i] and not arr[i-1]:
+                    print("i None:", i)
+                    node = st.pop(0)
+                    right_node = TreeNode(arr[i])
+                    node.right = right_node
+                    st.append(node)
+                elif arr[i]:
+                    print("i not None:", i)
+                    right_node = TreeNode(arr[i])
+                    node.right = right_node
+                    st.append(node)
+            i += 1
 
 
 def test_tree():
     tree = Tree()
-    tree.add(5)
-    tree.add(3)
-    tree.add(1)
-    tree.add(4)
-    tree.add(2)
-    tree.add(6)
-    tree.add(7)
+    arr = [1,3,None,4]
+    tree.create_tree(arr)
     tree.print_tree()
 
 if __name__ == "__main__":
