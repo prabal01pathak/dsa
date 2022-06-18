@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from collections import deque
 
 class TreeNode:
     def __init__(self, x, left=None, right=None):
@@ -29,51 +30,59 @@ class Tree:
             else:
                 self.add_node(node.right, x)
 
-    def print_tree(self):
-        print("Tree:")
-        self.print_node(self.root)
-
-    def print_node(self, node):
-        if node is not None:
-            print("node:", node.val, end=", ")
-            self.print_node(node.left)
-            self.print_node(node.right)
+    def print_tree(self, node, result):
+        if not node:
+            return None
+        queue = deque([ node ])
+        while queue:
+            root = queue.popleft()
+            result.append(root.val)
+            if root.left:
+                queue.append(root.left)
+            if root.right:
+                queue.append(root.right)
+        return result
 
     def create_tree(self, arr):
+        # arr: [root, root.left, root.right, root.left.left, root.left.right, root.right.left, root.right.right ...]
         if not arr:
-            return
-        st = []
-        i = 1
-        self.root = TreeNode(arr[0])
-        st.append(self.root)
-        while i < len(arr):
-            if i%2 > 0:
-                print("i:", i)
-                if arr[i]:
-                    node = st.pop(0)
-                    left_node = TreeNode(arr[i])
-                    node.left = left_node
-                    st.append(node)
+            return None
+        root = TreeNode(arr[0])
+        queue = deque([ root ])
+        for i, node_val in enumerate(arr):
+            if not i:
+                continue
+            if node_val:
+                node = TreeNode(node_val)
             else:
-                if arr[i] and not arr[i-1]:
-                    print("i None:", i)
-                    node = st.pop(0)
-                    right_node = TreeNode(arr[i])
-                    node.right = right_node
-                    st.append(node)
-                elif arr[i]:
-                    print("i not None:", i)
-                    right_node = TreeNode(arr[i])
-                    node.right = right_node
-                    st.append(node)
-            i += 1
+                node = None
+            if i%2:
+                root_node = queue.popleft()
+                root_node.left = node
+            else:
+                root_node.right = node
+            if node:
+                queue.append(node)
+        return root
+
+##             1
+##            / \ 
+##           /   \
+##         3      2
+##        /        \
+#        /          \
+#        4           5
+#      /  \           \
+#     /    \           \
+#    6      7           9
 
 
 def test_tree():
     tree = Tree()
-    arr = [1,3,None,4]
-    tree.create_tree(arr)
-    tree.print_tree()
+    arr = [1,3,2,4, None, None, 5, 6, 7, None, 9]
+    root = tree.create_tree(arr)
+    tree.root = root
+    print(tree.print_tree(root, []))
 
 if __name__ == "__main__":
     test_tree()
