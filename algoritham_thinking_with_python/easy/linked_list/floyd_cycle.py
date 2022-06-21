@@ -30,7 +30,7 @@ def make_cycle(head):
     first = head
     while current.next:
         current = current.next
-    current.next = head
+    current.next = head.next
     return head
 
 
